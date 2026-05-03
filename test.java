@@ -26,32 +26,90 @@ public class test {
             }
         }
 
-        System.out.println("Pre-order: ");
-        System.out.println("In-order: ");
-        System.out.println("Post-order: ");
+        System.out.print("Pre-order: ");
+        Iterator<Integer> iter = myTree.getPreorderIterator();
+
+        while(iter.hasNext()){
+            System.out.print(iter.next() + " ");
+        }
+        System.out.println(""); //finish pre-order sequence
+
+        System.out.print("In-order: ");
+        Iterator<Integer> iter2 = myTree.getInorderIterator();
+
+        while(iter2.hasNext()){
+            System.out.print(iter2.next() + " ");
+        }
+        System.out.println(""); //finish in-order sequence
+
+        System.out.print("Post-order: ");
+        Iterator<Integer> iter3 = myTree.getPostorderIterator();
+
+        while(iter3.hasNext()){
+            System.out.print(iter3.next() + " ");
+        }
+        System.out.println(""); //finish post-order sequence
+
         boolean keepGoing = true;
         while(keepGoing){
             System.out.print("Command? ");
             //removing whitespaces and changing input to lowercase
-            char input = keyboard.nextLine().trim().toLowerCase().charAt(0);
-            if(input=='i'){
+            String line = keyboard.nextLine().trim();
+            if(line.isEmpty()) continue;
 
+            //Split line by spaces where part[0] is command and part[1] is the number
+            String[] parts = line.split("\\s+");
+            char input = parts[0].toLowerCase().charAt(0);
+
+            //second part of the command(the number)
+            int value = 0;
+            if(parts.length > 1){
+                try{
+                    value = Integer.parseInt(parts[1]);
+                }
+                catch(NumberFormatException e){
+                    System.out.println("Invalid number format.");
+                    continue;
+                }
+            }
+            if(input=='i'){
+                if(myTree.add(value)==null){
+                    System.out.println(value + " inserted.");
+                }
+                else{
+                    System.out.println(value + " already exists.");
+                }
             }
             else if(input=='d'){
-                
+                if(myTree.remove(value)!=null){
+                    System.out.println(value + " deleted.");
+                }
+                else{
+                    System.out.println(value + " not found.");
+                }
             }
             else if(input=='p'){
-                
+                Integer pred = myTree.getPredecessor(value);
+                System.out.println("Predecessor: " + (pred == null ? "None" : pred));
             }
             else if(input=='s'){
-                
+                Integer succ = myTree.getSuccessor(value);
+                System.out.println("Successor: " + (succ == null ? "None" : succ));
             }
             else if(input=='e'){
                 keepGoing = false;
                 System.out.println("Thank you for using my program!");
             }
             else if(input=='h'){
-                
+                System.out.println("I   Insert a value");
+                System.out.println("D   Delete a value");
+                System.out.println("P   Find predecessor");
+                System.out.println("S   Find successor");
+                System.out.println("E   Exit the program");
+                System.out.println("H   Display this message");
+            }
+            else{ //an input different than the ones listed
+                System.out.println("Sorry, that is not a valid option, please view the help menu.");
             }
         }
         keyboard.close();

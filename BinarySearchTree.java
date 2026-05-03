@@ -213,18 +213,37 @@ public class BinarySearchTree<T extends Comparable<? super T>> implements Search
         public void set(T entry){
             item = entry;
         }
-    }
+    } //end ReturnObject
 
 
     /** @return True if anEntry is found in the tree. */
     public boolean contains(T anEntry){
-        return false;
-    }
+        return findEntry(getRootNode(), anEntry) !=null;
+    } //end contains
 
     /** @return The object in the tree that matches the entry, or null if not found. */
     public T getEntry(T entry){
-        return null;
-    }
+        return findEntry(getRootNode(), entry);
+    } //end getEntry
+
+    /** @return entry given from a node and it's target entry */
+    private T findEntry(BinaryNode<T> rootNode, T entry){
+        T result = null;
+        if(rootNode!=null){
+            T rootEntry = rootNode.getData();
+            int compare = entry.compareTo(rootEntry);
+            if(compare == 0){
+                result = rootEntry;
+            }
+            else if(compare < 0){
+                result = findEntry(rootNode.getLeftChild(), entry);
+            }
+            else if(compare > 0){
+                result = findEntry(rootNode.getRightChild(), entry);
+            }
+        }
+        return result;
+    } //end findEntry
 
 
     /** 
@@ -242,42 +261,62 @@ public class BinarySearchTree<T extends Comparable<? super T>> implements Search
 
         //returning the data removed
         return oldEntry.getData();
-    }
+    } //end remove
 
     /** @return An iterator that traverses the tree in sorted (ascending) order. */
     public Iterator<T> getInorderIterator(){
         return new InorderIterator();
-    }
+    } //end getInorderIterator
 
     /** @return An iterator that visits the root last (Left-Right-Root). */
     public Iterator<T> getPostorderIterator(){
         return new PostorderIterator();
-    }
+    } //end getPostorderIterator
 
     /** @return An iterator that visits the root first (Root-Left-Right). */
     public Iterator<T> getPreorderIterator(){
         return new PreorderIterator();
-    }
+    } //end getPreorderIterator
 
     /** @return The value that appears immediately before this entry  */
     public T getPredecessor(T entry){
-        return null;
-    }
+        Iterator<T> iter = getInorderIterator();
+        T prev = null;
+        while(iter.hasNext()){
+            T current = iter.next();
+            if(current.compareTo(entry)==0){
+                return prev; //returns item visited before the match
+            }
+            prev = current;
+        }
+        return null; //entry not found or smallest item with no predecessor
+    } //end getPredecessor
 
     /** @return The value that appears immediately after this entry  */
     public T getSuccessor(T entry){
-        return null;
-    }
+        Iterator<T> iter = getInorderIterator();
+        
+        while(iter.hasNext()){
+            T current = iter.next();
+            if(current.compareTo(entry)==0){
+                if(iter.hasNext()){
+                    return iter.next();
+                }
+                break;
+            }
+        }
+        return null; //if not found or it's largest item with no sucessor
+    } //end getSuccessor
 
     /** @return The data stored in the root node. */
     public T getRootData(){
         return root.data;
-    }
+    } //end getRootData
     
     /** @return The number of levels in the tree. */
     public int getHeight(){
         return getHeight(root);
-    }
+    } //end getHeight
 
     /** @return The number of levels in the tree at a specific node using recursion. */
     private int getHeight(BinaryNode<T> node){
@@ -287,12 +326,12 @@ public class BinarySearchTree<T extends Comparable<? super T>> implements Search
         else{ //return the height of whichever subtree has the greatest height
             return 1 + Math.max(getHeight(node.getLeftChild()), getHeight(node.getRightChild()));
         }
-    }
+    } //end getHeight
 
     /** @return The total number of nodes in the tree. */
     public int getNumberOfNodes(){
         return getNumberOfNodes(root);
-    }
+    } //end getNumberOfNodes
 
     /** @return The total number of nodes in a subtree/tree from a specific node. */
     public int getNumberOfNodes(BinaryNode<T> node){
@@ -302,17 +341,17 @@ public class BinarySearchTree<T extends Comparable<? super T>> implements Search
         else{
             return 1 + getNumberOfNodes(node.getLeftChild()) + getNumberOfNodes(node.getRightChild());
         }
-    }
+    } //end getNumberOfnodes
 
     /** @return True if the tree contains no nodes. */
     public boolean isEmpty(){
         return root==null;
-    }
+    } //end isEmpty
 
     /** Removes all nodes from the tree. */
     public void clear(){
         root = null;
-    }
+    } //end clear
 
     private class InorderIterator implements Iterator<T>{
         private Stack<BinaryNode<T>> nodeStack;
@@ -410,7 +449,6 @@ public class BinarySearchTree<T extends Comparable<? super T>> implements Search
             //go as far left from the currentNode
             while(currentNode!=null){
                 nodeStack.push(currentNode);
-                currentNode = currentNode.getLeftChild();
                 if(currentNode.hasLeftChild()){
                     currentNode = currentNode.getLeftChild();
                 }
