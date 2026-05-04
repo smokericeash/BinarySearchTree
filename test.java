@@ -75,14 +75,29 @@ public class test {
             if(input=='i'){
                 if(myTree.add(value)==null){
                     System.out.println(value + " inserted.");
+                    System.out.print("In-order: ");
+                    Iterator<Integer> iter4 = myTree.getInorderIterator();
+
+                    while(iter4.hasNext()){
+                        System.out.print(iter4.next() + " ");
+                    }
+                    System.out.println(""); //finish in-order sequence
                 }
                 else{
                     System.out.println(value + " already exists.");
                 }
+
             }
             else if(input=='d'){
                 if(myTree.remove(value)!=null){
                     System.out.println(value + " deleted.");
+                    System.out.print("In-order: ");
+                    Iterator<Integer> iter5 = myTree.getInorderIterator();
+
+                    while(iter5.hasNext()){
+                        System.out.print(iter5.next() + " ");
+                        }
+                    System.out.println(""); //finish in-order sequence
                 }
                 else{
                     System.out.println(value + " not found.");
@@ -113,5 +128,5 @@ public class test {
             }
         }
         keyboard.close();
-    }
+    } //end main
 }
